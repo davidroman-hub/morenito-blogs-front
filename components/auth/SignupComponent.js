@@ -1,5 +1,6 @@
-import {useState} from 'react';
-import {signup} from '../../actions/auth';
+import {useState, useEffect} from 'react';
+import {signup, isAuth} from '../../actions/auth';
+import Router from 'next/router'
 
 
 const SignupComponent = () => {
@@ -13,6 +14,10 @@ const [values, setvalues] = useState({
     message:'',
     showForm:true
 });
+
+useEffect(() => {
+    isAuth() && Router.push('/') /// if is auth the user cant return to login again
+},[])
 
 const {name, email, password, error, loading, message,showForm} = values
 
@@ -63,7 +68,7 @@ const showMessage = () => ( message ? <div className="alert alert-info">{message
                     <div className="form-group">
                         <input value={password} onChange={handleChange('password')} type="password" className="form-control" placeholder="Escribe tu constraseña"/>
                     </div>
-                    <div>
+                    <div className='text-center'>
                         <button className="btn btn-primary">Registrate</button>
                     </div>
             </form>

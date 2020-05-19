@@ -1,4 +1,4 @@
-import {useState} from 'react';
+import {useState, useEffect} from 'react';
 import {signin, authenticate, isAuth,} from '../../actions/auth';
 import Router from 'next/router';
 
@@ -13,6 +13,11 @@ const [values, setvalues] = useState({
     message:'',
     showForm:true
 });
+
+
+useEffect(() => {
+    isAuth() && Router.push('/') /// if is auth the user cant return to login again
+},[])
 
 const { email, password, error, loading, message,showForm} = values
 
@@ -56,7 +61,7 @@ const showMessage = () => ( message ? <div className="alert alert-info">{message
                     <div className="form-group">
                         <input value={password} onChange={handleChange('password')} type="password" className="form-control" placeholder="Escribe tu constraseña"/>
                     </div>
-                    <div>
+                    <div className="text-center">
                         <button className="btn btn-primary">Iniciar Sesión</button>
                     </div>
             </form>
