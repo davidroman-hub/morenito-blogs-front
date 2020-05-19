@@ -1,11 +1,11 @@
 import {useState} from 'react';
-import {signup} from '../../actions/auth';
+import {signin} from '../../actions/auth';
+import Router from 'next/router';
 
 
-const SignupComponent = () => {
+const SigninComponent = () => {
    
 const [values, setvalues] = useState({
-    name:'david',
     email:'jobdavidroman@gmail.com',
     password:'123456',
     error:'',
@@ -14,28 +14,23 @@ const [values, setvalues] = useState({
     showForm:true
 });
 
-const {name, email, password, error, loading, message,showForm} = values
+const { email, password, error, loading, message,showForm} = values
 
 
 const handleSubmit = e => {
     e.preventDefault(),
    // console.table({name, email, password, error, loading, message,showForm})
     setvalues({...values, loading:true, error:false })
-    const user = {name, email, password} 
+    const user = { email, password} 
     
-    signup(user).then(data => {
+    signin(user).then(data => {
         if(data.error){
             setvalues({...values, error:data.error, loading:false})
         } else {
-            setvalues({...values,
-                            name:'', 
-                            email:'', 
-                            password:'', 
-                            error:'', 
-                            loading:false, 
-                            message:data.message,
-                            showForm:false
-                        });
+            //Redirect// save user token to cookie
+            // save user info to localstorage
+            
+                Router.push('/')
                      }
                 });
             }
@@ -51,12 +46,9 @@ const showError = () => ( error ? <div className="alert alert-danger">{error}</d
 const showMessage = () => ( message ? <div className="alert alert-info">{message}</div>: '');
 
 
-    const signupForm = () => {
+    const signinForm = () => {
         return (
             <form onSubmit={handleSubmit}>
-                    <div className="form-group">
-                        <input value={name} onChange={handleChange('name')} type="text" className="form-control" placeholder="Escribe tu nombre"/>
-                    </div>
                     <div className="form-group">
                         <input value={email} onChange={handleChange('email')} type="email" className="form-control" placeholder="Escribe tu E-mail"/>
                     </div>
@@ -64,7 +56,7 @@ const showMessage = () => ( message ? <div className="alert alert-info">{message
                         <input value={password} onChange={handleChange('password')} type="password" className="form-control" placeholder="Escribe tu constraseña"/>
                     </div>
                     <div>
-                        <button className="btn btn-primary">Registrate</button>
+                        <button className="btn btn-primary">Iniciar Sesión</button>
                     </div>
             </form>
         )
@@ -77,9 +69,9 @@ const showMessage = () => ( message ? <div className="alert alert-info">{message
         {showError()}
         {showLoading()}
         {showMessage()}
-        {showForm && signupForm()}
+        {showForm && signinForm()}
         </React.Fragment>
     )
 }
 
-export default SignupComponent
+export default SigninComponent
