@@ -56,13 +56,35 @@ const Header = () => {
                     )}
                   
                     {/* {JSON.stringify(isAuth())} */}
-                    {isAuth() && (
+                   
+                  {isAuth() && isAuth().role == '0' && (
+                        <NavItem  style={{cursor:'pointer'}}>
+                        <Link href="/user">
+                          <NavLink>
+                            {isAuth().name}
+                           </NavLink>
+                        </Link>
+                      </NavItem>
+                  )}
+                   {isAuth() && isAuth().role == '1' && (
+                        <NavItem  style={{cursor:'pointer'}}>
+                        <Link href="/admin">
+                          <NavLink>
+                            Admin
+                           </NavLink>
+                        </Link>
+                      </NavItem>
+                  )}
+                   {isAuth() && (
                       <NavItem>
                         <NavLink style={{cursor:'pointer'}} onClick={() => signout(() => Router.replace(`/signin`) )}>
                           Salir de la Sesión
                         </NavLink>
                   </NavItem>
+                  
+                  
                     )}  
+                    
                     <UncontrolledDropdown nav inNavbar>
                       {/* <DropdownToggle nav caret>
                         Options
