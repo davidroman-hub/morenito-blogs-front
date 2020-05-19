@@ -1,6 +1,9 @@
 import {useState} from 'react';
 import {APP_NAME} from '../config'
+import Router from 'next/router'
 import Link from 'next/Link'
+import {signout, isAuth} from '../actions/auth'
+
 import {
   Collapse,
   Navbar,
@@ -31,21 +34,35 @@ const Header = () => {
                 </Link>
                 <NavbarToggler onClick={toggle} />
                 <Collapse isOpen={isOpen} navbar>
-                  <Nav className="mr-auto" navbar>
-                    <NavItem>
+                  <Nav className="ml-auto" navbar>
+                  
+                    {!isAuth() && (
+                      <React.Fragment>
+                         <NavItem  style={{cursor:'pointer'}}>
+                         <Link href="/signin">
+                           <NavLink>
+                             Inicia Sesión
+                           </NavLink>
+                         </Link>
+                     </NavItem> 
+                     <NavItem  style={{cursor:'pointer'}}>
                         <Link href="/signup">
                           <NavLink>
                             Registro
                           </NavLink>
                         </Link>
                     </NavItem>
-                    <NavItem>
-                        <Link href="/signin">
-                          <NavLink>
-                            Inicia Sesión
-                          </NavLink>
-                        </Link>
-                    </NavItem>
+                     </React.Fragment>
+                    )}
+                  
+                    {/* {JSON.stringify(isAuth())} */}
+                    {isAuth() && (
+                      <NavItem>
+                        <NavLink style={{cursor:'pointer'}} onClick={() => signout(() => Router.replace(`/signin`) )}>
+                          Salir de la Sesión
+                        </NavLink>
+                  </NavItem>
+                    )}  
                     <UncontrolledDropdown nav inNavbar>
                       {/* <DropdownToggle nav caret>
                         Options
@@ -64,7 +81,7 @@ const Header = () => {
                       </DropdownMenu> */}
                     </UncontrolledDropdown>
                   </Nav>
-                  <NavbarText>Simple Text</NavbarText>
+                  {/* <NavbarText>Simple Text</NavbarText> */}
                 </Collapse>
               </Navbar>
             </div>
