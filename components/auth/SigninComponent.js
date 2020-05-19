@@ -1,5 +1,5 @@
 import {useState} from 'react';
-import {signin} from '../../actions/auth';
+import {signin, authenticate, isAuth,} from '../../actions/auth';
 import Router from 'next/router';
 
 
@@ -29,8 +29,9 @@ const handleSubmit = e => {
         } else {
             //Redirect// save user token to cookie
             // save user info to localstorage
-            
-                Router.push('/')
+                authenticate(data, () => {
+                    Router.push('/');
+                        })
                      }
                 });
             }
