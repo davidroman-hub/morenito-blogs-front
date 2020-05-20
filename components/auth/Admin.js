@@ -12,6 +12,7 @@ const Admin = ({children}) => {
             Router.push(`/`)
         }
     }, [])
+    
     return <React.Fragment>
         {children}
     </React.Fragment>
