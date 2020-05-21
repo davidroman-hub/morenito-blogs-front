@@ -1,6 +1,7 @@
 import Layout from '../../../components/Layout'
 import Link from 'next/Link'
 import Admin from '../../../components/auth/Admin'
+import Category from '../../../components/crud/Category'
 
 const CategoryTag = () => {
     return (
@@ -14,7 +15,7 @@ const CategoryTag = () => {
                             <div className="col-md-4">
                                 <ul className="list-group">
                                     <li className="list-group-item">
-                                    categorias
+                                    <Category/>
                                     </li>   
                                 </ul>
                             </div>
