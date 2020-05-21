@@ -4,7 +4,7 @@ import Router from 'next/router'
 import Link from 'next/Link'
 import {signout, isAuth} from '../actions/auth'
 import NProgress from 'nprogress'
-
+import '.././node_modules/nprogress/nprogress.css'
 import {
   Collapse,
   Navbar,
