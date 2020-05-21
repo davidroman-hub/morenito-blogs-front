@@ -2,14 +2,14 @@ import {useState,useEffect} from 'react';
 import Link from 'next/Link'
 import Router from 'next/router'
 import {Layout} from '../Layout'
-import {isAuth, getCookie} from '../../actions/auth'
+import {getCookie} from '../../actions/auth'
 import {create, getCategories, removeCategory, singleCategory} from '../../actions/category'
 
 const Category = () => {
-    const [values, setvalues] =useState ({
+    const [values, setvalues] = useState ({
         name:'',
-        error:'',
-        success:'',
+        error:false,
+        success:false,
         categories:[],
         removed:false,
         reload:false
@@ -20,6 +20,10 @@ const Category = () => {
 
         const {name, error, success, categories,removed, reload} = values
         const token = getCookie('token')
+
+        useEffect(() => {
+            loadCategories()
+        },[reload])
 
         const loadCategories = () => { 
                 getCategories().then( data => {
@@ -33,7 +37,14 @@ const Category = () => {
 
         const showCategories = () => {
             return categories.map((c,i) => {
-                return <button  onDoubleClick={() => deleteConfirm(c.slug)} title="Doble click para eliminar"  key={i} className="btn btn-outline-primary mr-1 ml-1 mt-3">{c.name}</button>
+                return( <button  
+                onDoubleClick={() => deleteConfirm(c.slug)} 
+                title="Doble click para eliminar"  
+                key={i} 
+                className="btn btn-outline-primary mr-1 ml-1 mt-3">
+                    {c.name}
+                 </button>
+                )
             })
         }
 
@@ -51,35 +62,60 @@ const Category = () => {
                 if(data.error){
                     console.log(data.error)
                 } else {
-                    setvalues({...values, error:false , success:false, name:'', removed:!removed, reload:!reload})
+                    setvalues({...values, error:false , success:false, name:'', removed:!removed, reload:!reload});
                 }
             })
         }
   
 
-    useEffect(() => {
-        loadCategories()
-    },[reload])
+    
 
 
 
-        const handleSubmit = (e) => {
+        const handleSubmit = e => {
             e.preventDefault()
-            console.log('create Category', name)
+            //console.log('create Category', name)
             create({name}, token).then(data => {
                 if (data.error){
                     setvalues({...values, error: data.error, success:false})
                 }else {
-                    setvalues({...values, error:false, success:true, name:'', removed:!removed, reload:!reload})
+                    setvalues({...values, error:false, success:true, name:'', reload:!reload})
                 }
             })
         }
 
-        const handleChange = (e) => {
-            setvalues({...values, name: e.target.value, error:false, success:false})
+        const handleChange = e => {
+            setvalues({...values, name: e.target.value, error:false, success:false, removed:''})
         }
 
-     
+
+        //// SUCCESS and ERROR MESSAGES
+
+
+        const showSuccess = () => {
+            if(success){
+                 return <p className="text-success">Categoria ha sido creada!</p>
+            }
+        }
+
+        
+        const showError = () => {
+            if(error){
+            return <p className="text-danger">La categoria con ese nombre ya existe!</p>
+            }
+        }
+        
+        const showRemoved = () => {
+            if(removed){
+                return <p className="text-danger">La categoria ha sido eliminada</p>
+            }
+        }
+
+        const mouseMoveHandler  = e => {
+            setvalues({...values, error: false, success:false, removed:''})
+        }
+
+
         const newCategoryForm = () => (
 
             <form onSubmit={handleSubmit}>
@@ -91,12 +127,16 @@ const Category = () => {
                      <button className="btn btn-primary">Crear Categoria</button>
                 </div>
             </form>
-        )
+        );
 
 
         return <React.Fragment>
-                {newCategoryForm()}
-                <div>
+               
+                {showSuccess()}
+                {showError()}
+                {showRemoved()}            
+                <div onMouseMove = {mouseMoveHandler}>
+                    {newCategoryForm()}
                     {showCategories()}
                 </div>
                </React.Fragment>
@@ -104,3 +144,4 @@ const Category = () => {
 }
 
 export default Category
+
