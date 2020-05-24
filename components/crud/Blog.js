@@ -25,6 +25,14 @@ const NewBlog = ({router}) => {
         }
     }
 
+    //show categories and tags
+
+    const [categories, setCategories] = useState([])
+    const [tags, setTags] = useState([])
+
+
+
+
     const [body, setBody] = useState(blogFromLocalStorage())
     const [values, setValues] = useState({
         error:'',
@@ -38,8 +46,54 @@ const NewBlog = ({router}) => {
     const {error, sizeError, success, formData, title, hidePublishButton} = values
 
     useEffect(() => {
-        setValues({...values,formData: new FormData})
+        setValues({...values,formData: new FormData});
+        initCategories();
+        initTags();
     },[router])
+
+    const initCategories = () => {
+        getCategories().then(data => {
+            if (data.error){
+                setValues({...values,error: data.error})
+            } else {
+                setCategories(data)
+            }
+        })
+    }
+
+    const initTags = () => {
+        getTags().then(data => {
+            if (data.error){
+                setValues({...values,error: data.error})
+            } else {
+                setTags(data)
+            }
+        })
+    }
+
+    const showCategories = () => {
+        return (
+            categories && categories.map((c, i) => (
+                <li key={i} className='list-unstyled'>
+                    <input type='checkbox' className='mr-2'/>
+                    <label className='form-check-label'>{c.name}</label>
+                </li>
+            ))
+        )
+    }
+    
+    const showTags = () => {
+        return (
+            tags && tags.map((t, i) => (
+                <li key={i} className='list-unstyled'>
+                    <input type='checkbox' className='mr-2'/>
+                    <label className='form-check-label'>{t.name}</label>
+                </li>
+            ))
+        )
+    }
+
+
 
     const handleChange = name => e => {
         //return console.log(e.target.value);
@@ -56,6 +110,8 @@ const NewBlog = ({router}) => {
             localStorage.setItem('blog', JSON.stringify(e))
         }
     } 
+
+    
     
     const createFormBlog = () => {
         
@@ -84,13 +140,22 @@ const NewBlog = ({router}) => {
     }
 
     return(
-        <div>
+        <div className='container-fluid'>
             
         {/* {JSON.stringify(router)} */}
-        {createFormBlog()}
-        <hr/>
-        {JSON.stringify(title)}
-        </div>
+            {createFormBlog()}
+                <hr/>
+                <div className='col-md-4'>
+                    <h5>Categorias</h5>
+                   <ul style={{maxHeight: '100px', overflow:'scroll'}}> {showCategories()}</ul>
+                    <hr/>
+                    </div>   
+                <div className='col-md-4'>   
+                    <h5>Etiquetas</h5>
+                  <ul  style={{maxHeight: '100px', overflow:'scroll'}}> {showTags()} </ul>
+                </div>    
+            </div>
+  
     )
 }
 

@@ -20,11 +20,9 @@ export const create = (category,token) => {
 };
 
 // get the categories
-
 export const getCategories = () => {
     return fetch(`${API}/categories`, {
-        method: 'GET',
-    
+        method: 'GET'
     })
         .then(response => {
             return response.json();

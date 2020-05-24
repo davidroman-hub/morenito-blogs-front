@@ -23,15 +23,13 @@ export const createTag = (tag,token) => {
 
 export const getTags = () => {
     return fetch(`${API}/tags`, {
-        method: 'GET',
-    
+        method: 'GET'
     })
         .then(response => {
             return response.json();
         })
         .catch(err => console.log(err));
 };
-
 // get a single category
 
 export const singleTag = (slug) => {
