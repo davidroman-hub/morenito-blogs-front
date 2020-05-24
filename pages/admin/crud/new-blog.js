@@ -10,12 +10,12 @@ const Blog = () => {
         <Layout>
             <Admin>
             <div className="container-fluid">
-                    <div className="row">
+                    <div className="">
                         <div className="col-md-12 pt-5 pb-5 pl-4">
                         <h1>Crear un nuevo Blog</h1>   
                         </div>
                             {/* <div className="col-md-4 pb-3 pl-5"> */}
-                            <div>
+                            <div className='text'>
                                     <NewBlog/>
                             </div>
                     </div>
