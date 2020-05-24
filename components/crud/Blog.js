@@ -30,6 +30,8 @@ const NewBlog = ({router}) => {
     const [categories, setCategories] = useState([])
     const [tags, setTags] = useState([])
 
+    const [checked, setChecked] = useState([]) // categories checked
+    const [checkedYag, setCheckedTag] = useState([])// tags checked
 
 
 
@@ -74,14 +76,30 @@ const NewBlog = ({router}) => {
     const showCategories = () => {
         return (
             categories && categories.map((c, i) => (
-                <li key={i} className='list-unstyled'>
-                    <input type='checkbox' className='mr-2'/>
+                <li key={i}  className='list-unstyled'>
+                    <input onChange={handleToggle(c._id)}  type='checkbox' className='mr-2'/>
                     <label className='form-check-label'>{c.name}</label>
                 </li>
             ))
         )
     }
     
+    const handleToggle = (c) => () => {
+        setValues({...values,error:''})
+
+        // return the first index or -1
+        const clickCategory = checked.indexOf(c)
+        const all = [...checked]
+        if(clickCategory === -1) {
+            all.push(c)
+        }else{
+            all.splice(clickCategory, 1)
+        }
+        console.log(all)
+        setChecked(all)
+        formData.set('categories', all)
+    } 
+
     const showTags = () => {
         return (
             tags && tags.map((t, i) => (
