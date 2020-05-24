@@ -31,7 +31,7 @@ const NewBlog = ({router}) => {
     const [tags, setTags] = useState([])
 
     const [checked, setChecked] = useState([]) // categories checked
-    const [checkedYag, setCheckedTag] = useState([])// tags checked
+    const [checkedTag, setCheckedTag] = useState([])// tags checked
 
 
 
@@ -46,12 +46,15 @@ const NewBlog = ({router}) => {
     })
 
     const {error, sizeError, success, formData, title, hidePublishButton} = values
-
+    const token = getCookie('token')
     useEffect(() => {
         setValues({...values,formData: new FormData});
         initCategories();
         initTags();
     },[router])
+
+
+     /// CATEGORIES
 
     const initCategories = () => {
         getCategories().then(data => {
@@ -63,15 +66,7 @@ const NewBlog = ({router}) => {
         })
     }
 
-    const initTags = () => {
-        getTags().then(data => {
-            if (data.error){
-                setValues({...values,error: data.error})
-            } else {
-                setTags(data)
-            }
-        })
-    }
+  
 
     const showCategories = () => {
         return (
@@ -100,18 +95,50 @@ const NewBlog = ({router}) => {
         formData.set('categories', all)
     } 
 
-    const showTags = () => {
-        return (
-            tags && tags.map((t, i) => (
-                <li key={i} className='list-unstyled'>
-                    <input type='checkbox' className='mr-2'/>
-                    <label className='form-check-label'>{t.name}</label>
-                </li>
-            ))
-        )
+////// TAGS
+
+const initTags = () => {
+    getTags().then(data => {
+        if (data.error){
+            setValues({...values,error: data.error})
+        } else {
+            setTags(data)
+        }
+    })
+}
+
+const showTags = () => {
+    return (
+        tags && tags.map((t, i) => (
+            <li key={i} className='list-unstyled'>
+                <input onChange={handleToggleTags(t._id)} type='checkbox' className='mr-2'/>
+                <label className='form-check-label'>{t.name}</label>
+            </li>
+        ))
+    )
+}
+
+
+  
+const handleToggleTags = (t) => () => {
+    setValues({...values,error:''})
+
+    // return the first index or -1
+    const clickTag = checkedTag.indexOf(t)
+    const all = [...checkedTag]
+    if(clickTag === -1) {
+        all.push(t)
+    }else{
+        all.splice(clickTag, 1)
     }
+    console.log(all)
+    setCheckedTag(all)
+    formData.set('tags', all)
+} 
 
 
+
+///////////////////////
 
     const handleChange = name => e => {
         //return console.log(e.target.value);
@@ -130,13 +157,28 @@ const NewBlog = ({router}) => {
     } 
 
     
+/// CREATE A BLOG METHOD
+
     
     const createFormBlog = () => {
         
         const publishBlog = (e) => {
             e.preventDefault()
-            console.log('ready tu publish')
+        //      console.log('ready tu publish')
+            createBlog(formData, token).then( data => {
+                if (data.error){
+                    setValues({...values,error: data.error})
+                } else {
+                    setValues({...values, title:'', error: '', success:`El post  "${data.title}" ha sido creado!`})
+                    setBody('')
+                    setCategories([])
+                    setTags([])
+                }
+            })
         } 
+
+
+        ////// Form
 
         return (
             <form onSubmit={publishBlog}>
@@ -163,6 +205,15 @@ const NewBlog = ({router}) => {
         {/* {JSON.stringify(router)} */}
             {createFormBlog()}
                 <hr/>
+                    < div className='form-group pb-2'>
+                        <h5>Imagen destacada</h5>
+                        <hr/>
+                        <small className='text-muted'>Tamaño máximo 1 mb</small>
+                        <br/>
+                        <label className='btn btn-outline-info'>Cargar la imagen destacada
+                        <input onChange={handleChange('photo')} type='file' accept="image/*" hidden/>
+                        </label>
+                    </div>
                 <div className='col-md-4'>
                     <h5>Categorias</h5>
                    <ul style={{maxHeight: '100px', overflow:'scroll'}}> {showCategories()}</ul>
