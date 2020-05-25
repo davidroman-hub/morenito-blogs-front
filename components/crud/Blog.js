@@ -156,6 +156,19 @@ const handleToggleTags = (t) => () => {
         }
     } 
 
+
+    /// ERRORS AND SUCCESS MSJS
+
+    const showError = () => (
+             <div className="alert alert-danger" style={{display: error ? '' : 'none'}}>{error}</div>
+    )
+
+    
+    const showSuccess = () => (
+           <div className="alert alert-success" style={{display: success ? '' : 'none'}}>{success}</div>
+        )
+
+
     
 /// CREATE A BLOG METHOD
 
@@ -182,7 +195,7 @@ const handleToggleTags = (t) => () => {
 
         return (
             <form onSubmit={publishBlog}>
-                <div className="form-group">
+                <div className="form-group pl-5 pr-5">
                     <label className="text-muted">Titulo</label>
                     <input type="text" className="form-control" value={title} onChange={handleChange('title')}/>
                 </div>   
@@ -203,9 +216,15 @@ const handleToggleTags = (t) => () => {
         <div className='container-fluid'>
             
         {/* {JSON.stringify(router)} */}
-            {createFormBlog()}
+            <div className='pt-3 ml-5 mr-5'>
+                {createFormBlog()}
+            </div>
+            <div className='pt-3 ml-5 mr-5'> 
+                {showError()}
+                {showSuccess()}
+           </div>     
                 <hr/>
-                    < div className='form-group pb-2'>
+                    < div className='form-group pb-2 text-center'>
                         <h5>Imagen destacada</h5>
                         <hr/>
                         <small className='text-muted'>Tamaño máximo 1 mb</small>
