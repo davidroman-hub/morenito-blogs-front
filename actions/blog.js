@@ -19,18 +19,20 @@ export const createBlog = (blog,token) => {
         .catch(err => console.log(err));
 };
 
-// get the categories
+// get the list of blogs
 
-// export const getCategories = () => {
-//     return fetch(`${API}/categories`, {
-//         method: 'GET',
-    
-//     })
-//         .then(response => {
-//             return response.json();
-//         })
-//         .catch(err => console.log(err));
-// };
+export const listBlogsWithCategoriesAndTags = () => {
+    return fetch(`${API}/blogs-categories-tags`, {
+        method: 'POST',
+        headers:{
+            Accept: 'application/json',
+        }
+    })
+        .then(response => {
+            return response.json();
+        })
+        .catch(err => console.log(err));
+};
 
 // // get a single category
 

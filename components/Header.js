@@ -35,6 +35,7 @@ const Header = () => {
     return (
       
             <div>
+         
               <Navbar color="light" light expand="md">
                 <Link href="/">
                   <NavLink className="font-weight-bold">{APP_NAME}</NavLink>
@@ -42,7 +43,14 @@ const Header = () => {
                 <NavbarToggler onClick={toggle} />
                 <Collapse isOpen={isOpen} navbar>
                   <Nav className="ml-auto" navbar>
-                  
+
+                  <React.Fragment>
+                    <NavItem style={{cursor:'pointer'}}>
+                      <Link href='/blogs'>
+                        <NavLink>Blogs</NavLink>
+                      </Link>
+                    </NavItem>
+                  </React.Fragment>  
                     {!isAuth() && (
                       <React.Fragment>
                          <NavItem  style={{cursor:'pointer'}}>
