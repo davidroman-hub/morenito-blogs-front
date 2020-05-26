@@ -8,13 +8,13 @@ import {API, DOMAIN, APP_NAME, FB_APP_ID} from '../../config'
 import {withRouter}from 'next/router'
 
 
-const SingleBlog = ({router}) => {
+const SingleBlog = ({blog,router}) => {
     return (
         <React.Fragment>
             <Layout>
                 <div className="container-fluid">
                     <section>
-                        {JSON.stringify(router)}
+                        {JSON.stringify(blog)}
                     </section>
                 </div>
             </Layout>
@@ -24,5 +24,15 @@ const SingleBlog = ({router}) => {
 }
 
 
+SingleBlog.getInitialProps = ({query}) => {
+    return singleBlog(query.slug).then( data  => {
+        if(data.error){
+            console.log(data.error)
+        } else {
+            console.log('Get initial props in single blog',data)
+            return {blog: data}
+        }
+    })
+}
 
 export default withRouter(SingleBlog)
