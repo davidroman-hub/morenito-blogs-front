@@ -3,15 +3,38 @@ import Link from 'next/link'
 import Layout from '../../components/Layout'
 import {useState,useEffect} from 'react'
 import {listBlogsWithCategoriesAndTags} from '../../actions/blog'
-import {API} from '../../config'
 import Card from '../../components/blog/Card'
+import {API, DOMAIN, APP_NAME, FB_APP_ID} from '../../config'
+import {withRouter}from 'next/router'
 
 
 
+const Blogs = ({blogs, categories, tags, size, router}) => {
 
 
-const Blogs = ({blogs, categories, tags, size}) => {
+    const head = () => (
+        <Head>
+        <title>Morenito Blogs | {APP_NAME}</title>
+        <meta
+            name="description"
+            content="Blog de actualidades, Videojuegos y tecnología!"
+        />
+        <link rel="canonical" href={`${DOMAIN}${router.pathname}`} />
+        <meta property="og:title" content={`Las ultimas noticias de tecnología! | ${APP_NAME}`} />
+        <meta
+            property="og:description"
+            content="Blog de actualidades, Videojuegos y tecnología!"
+        />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content={`${DOMAIN}${router.pathname}`} />
+        <meta property="og:site_name" content={`${APP_NAME}`} />
 
+        <meta property="og:image" content={`${DOMAIN}/static/img/seoAv.png`} />
+        <meta property="og:image:secure_url" content={`${DOMAIN}/static/img/seoAV.png`} />
+        <meta property="og:image:type" content="image/jpg" />
+        <meta property="fb:app_id" content={`${FB_APP_ID}`} />
+    </Head>
+    )
 
 
     const showAllBlogs = () => {
@@ -45,7 +68,9 @@ const showAllTags = () => {
 
     return (
        
-            <Layout>
+       <React.Fragment>
+           {head()}
+                <Layout>
                 <main>
                     <div className="container-fluid">
                         <header>
@@ -69,6 +94,7 @@ const showAllTags = () => {
                     </div>
                 </main>
             </Layout>
+       </React.Fragment>   
        
     )
 }
@@ -88,5 +114,5 @@ Blogs.getInitialProps = () => {
     } )
 }
 
-export default Blogs // getInitialProps
+export default withRouter(Blogs) // getInitialProps
 
