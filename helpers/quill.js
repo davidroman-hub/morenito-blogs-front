@@ -4,8 +4,8 @@ export const QuillModules = {
         [{ size: [] }],
         ['bold', 'italic', 'underline', 'strike', 'blockquote'],
         [{ list: 'ordered' }, { list: 'bullet' }],
-        ['link', 'video'],
-        // ['link', 'image', 'video'],
+       // ['link', 'video'],
+         ['link', 'image', 'video'],
         ['clean'],
         ['code-block']
     ]
@@ -23,7 +23,7 @@ export const QuillFormats = [
     'list',
     'bullet',
     'link',
-    // 'image',
+     'image',
     'video',
     'code-block'
 ];
