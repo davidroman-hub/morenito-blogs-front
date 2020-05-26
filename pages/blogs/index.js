@@ -5,6 +5,11 @@ import {useState,useEffect} from 'react'
 import {listBlogsWithCategoriesAndTags} from '../../actions/blog'
 import {API} from '../../config'
 import Card from '../../components/blog/Card'
+
+
+
+
+
 const Blogs = ({blogs, categories, tags, size}) => {
 
 
@@ -22,7 +27,21 @@ const Blogs = ({blogs, categories, tags, size}) => {
     }
 
 
+const showAllCategories = () => {
+        return categories.map((c,i) => (
+            <Link href={`/categories/${c.slug}`} key={i}>
+                <a className="btn btn-primary mr-1 ml1 mt-3">{c.name}</a>
+            </Link>    
+            ))
+    }
 
+const showAllTags = () => {
+    return tags.map((t,i) => (
+        <Link href={`/tags/${t.slug}`} key={i}>
+            <a className="btn btn-outline-primary mr-1 ml1 mt-3">{t.name}</a>
+        </Link>    
+        ))
+    }
 
     return (
        
@@ -34,7 +53,11 @@ const Blogs = ({blogs, categories, tags, size}) => {
                                 <h4 className="display-4 font-weight-bold text-center">Blogs sobre videojuegos, tutoriales y tecnología!</h4>
                             </div>
                             <section className="">
-                                <p>Show categories and tags</p>
+                                <div className="pb-5 text-center">
+                                    {showAllCategories()}
+                                    <br/>
+                                    {showAllTags()}
+                                </div>
                             </section>
                         </header>
                     </div>
