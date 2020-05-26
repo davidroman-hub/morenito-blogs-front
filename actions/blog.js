@@ -21,12 +21,18 @@ export const createBlog = (blog,token) => {
 
 // get the list of blogs
 
-export const listBlogsWithCategoriesAndTags = () => {
+export const listBlogsWithCategoriesAndTags = (skip, limit) => {
+    const data = {
+        limit,skip
+    }
+
     return fetch(`${API}/blogs-categories-tags`, {
         method: 'POST',
         headers:{
             Accept: 'application/json',
-        }
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
     })
         .then(response => {
             return response.json();

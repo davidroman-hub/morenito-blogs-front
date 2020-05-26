@@ -9,8 +9,12 @@ import {withRouter}from 'next/router'
 
 
 
-const Blogs = ({blogs, categories, tags, size, router}) => {
+const Blogs = ({blogs, categories, tags, totalBlogs, blogsLimit, blogSkip, router}) => {
 
+    const [limit, setLimit] = useState(blogsLimit);
+    const [skip, setSkip] = useState(0);
+    const [size, setSize] = useState(totalBlogs);
+    const [loadedBlogs, setLoadedBlogs] = useState([]);
 
     const head = () => (
         <Head>
@@ -100,7 +104,11 @@ const showAllTags = () => {
 }
 
 Blogs.getInitialProps = () => {
-    return listBlogsWithCategoriesAndTags().then(data => {
+
+    let skip = 0
+    let limit =2 
+
+    return listBlogsWithCategoriesAndTags(skip, limit).then(data => {
         if (data.error){
             console.log(data.error)
         } else {
@@ -108,7 +116,10 @@ Blogs.getInitialProps = () => {
                 blogs: data.blogs,
                 categories: data.categories, 
                 tags: data.tags, 
-                size: data.size
+                //size: data.size,
+                totalBlogs: data.size,
+                blogsLimit : limit,
+                blogSkip : skip
             }
         }
     } )
