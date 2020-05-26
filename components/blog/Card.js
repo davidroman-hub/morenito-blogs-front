@@ -1,7 +1,7 @@
 import Link from 'next/Link'
 import renderHTML from 'react-render-html';
 import moment from 'moment'
-
+import {API} from '../../config'
 const Card = ({blog}) => {
 
     const showBlogCategories = blog => 
@@ -43,7 +43,15 @@ const Card = ({blog}) => {
                           <br/>
                         </section>
                         <div className="row">
-                            <div className="col-md-4">imagen</div>
+                            <div className="col-md-4">
+                                <section className='mb-5'>
+                                    <img className="img img-fluid" 
+                                    style={{maxHeight:'150px', width:'auto', borderRadius:'100px'}} 
+                                    src={`${API}/blog/photo/${blog.slug}`} 
+                                    alt={blog.title}
+                                     />
+                                </section>
+                            </div>
                             <div className="col-md-8">
                                 <section>
                                 <div className="pb-3">{renderHTML(blog.excerpt)}</div>
