@@ -11,10 +11,7 @@ import {withRouter}from 'next/router'
 
 const Blogs = ({blogs, categories, tags, totalBlogs, blogsLimit, blogSkip, router}) => {
 
-    const [limit, setLimit] = useState(blogsLimit);
-    const [skip, setSkip] = useState(0);
-    const [size, setSize] = useState(totalBlogs);
-    const [loadedBlogs, setLoadedBlogs] = useState([]);
+   
 
     const head = () => (
         <Head>
@@ -40,6 +37,36 @@ const Blogs = ({blogs, categories, tags, totalBlogs, blogsLimit, blogSkip, route
     </Head>
     )
 
+ 
+    const [limit, setLimit] = useState(blogsLimit);
+    const [skip, setSkip] = useState(0);
+    const [size, setSize] = useState(totalBlogs);
+    const [loadedBlogs, setLoadedBlogs] = useState([]);
+
+
+    const loadMore = () => {
+        let toSkip = skip + limit;
+        listBlogsWithCategoriesAndTags(toSkip,limit).then( data => {
+            if(data.error){
+                console.log(data.error)
+            } else {
+                setLoadedBlogs([...loadedBlogs,...data.blogs])
+                setSize(data.size)
+                setSkip(toSkip)
+            }
+        })
+    }
+
+    const loadMoreButton = () => {
+        return  (
+            size > 0 &&
+            size >= limit && (
+             <button onClick={loadMore} className="btn btn-outline-primary btn-lg">
+                 Cargar más
+                 </button>
+            )
+        )
+    }
 
     const showAllBlogs = () => {
         return blogs.map((blog,i) => {
@@ -57,7 +84,7 @@ const Blogs = ({blogs, categories, tags, totalBlogs, blogsLimit, blogSkip, route
 const showAllCategories = () => {
         return categories.map((c,i) => (
             <Link href={`/categories/${c.slug}`} key={i}>
-                <a className="btn btn-primary mr-1 ml1 mt-3">{c.name}</a>
+                <a className="btn btn-primary mr-1 ml-1 mt-3">{c.name}</a>
             </Link>    
             ))
     }
@@ -70,6 +97,14 @@ const showAllTags = () => {
         ))
     }
 
+    const showLoadedBlogs = () => {
+        return loadedBlogs.map((blog, i) => (
+            <article key={i}>
+                <Card blog={blog} />
+            </article>
+        ));
+    };
+    
     return (
        
        <React.Fragment>
@@ -90,12 +125,15 @@ const showAllTags = () => {
                             </section>
                         </header>
                     </div>
-                    <div className="container-fluid">
-                            <div className="row">
+                    <div className="container">
                                  {/* <div className="col-md-12"> {JSON.stringify(blogs)}</div> */}
-                                 <div className="col-md-12"> {showAllBlogs()}</div>
-                            </div>
-                    </div>
+                                 {showAllBlogs()}
+                        </div>
+                    <div className="container">{showLoadedBlogs()}</div>   
+                
+                    <div className="container text-center">{loadMoreButton()}</div>              
+                            
+            
                 </main>
             </Layout>
        </React.Fragment>   
@@ -106,7 +144,7 @@ const showAllTags = () => {
 Blogs.getInitialProps = () => {
 
     let skip = 0
-    let limit =2 
+    let limit = 2 
 
     return listBlogsWithCategoriesAndTags(skip, limit).then(data => {
         if (data.error){
