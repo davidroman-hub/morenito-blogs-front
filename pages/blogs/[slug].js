@@ -6,33 +6,106 @@ import {singleBlog} from '../../actions/blog'
 import Card from '../../components/blog/Card'
 import {API, DOMAIN, APP_NAME, FB_APP_ID} from '../../config'
 import {withRouter}from 'next/router'
+import moment from 'moment'
+import renderHTML from 'react-render-html';
 
 
-const SingleBlog = ({blog,router}) => {
+const SingleBlog = ({blog,query}) => {
+
+const head = () => (
+
+    <Head>
+    <title>
+        {blog.title} | {APP_NAME}
+    </title>
+    <meta name="description" content={blog.mdesc} />
+    <link rel="canonical" href={`${DOMAIN}/blogs/${query.slug}`} />
+    <meta property="og:title" content={`${blog.title}| ${APP_NAME}`} />
+    <meta property="og:description" content={blog.mdesc} />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={`${DOMAIN}/blogs/${query.slug}`} />
+    <meta property="og:site_name" content={`${APP_NAME}`} />
+
+    <meta property="og:image" content={`${API}/blog/photo/${blog.slug}`} />
+    <meta property="og:image:secure_url" ccontent={`${API}/blog/photo/${blog.slug}`} />
+    <meta property="og:image:type" content="image/jpg" />
+    <meta property="fb:app_id" content={`${FB_APP_ID}`} />
+</Head>
+)
+
+    const showBlogCategories = blog =>
+    blog.categories.map((c, i) => (
+        <Link key={i} href={`/categories/${c.slug}`}>
+            <a className="btn btn-primary mr-1 ml-1 mt-3">{c.name}</a>
+        </Link>
+    ));
+
+const showBlogTags = blog =>
+    blog.tags.map((t, i) => (
+        <Link key={i} href={`/tags/${t.slug}`}>
+            <a className="btn btn-outline-primary mr-1 ml-1 mt-3">{t.name}</a>
+        </Link>
+    ));
+
+
     return (
         <React.Fragment>
+            {head()}
             <Layout>
-                <div className="container-fluid">
-                    <section>
-                        {JSON.stringify(blog)}
-                    </section>
-                </div>
+                <main>
+                    <article>
+                        <div className="container-fluid">
+                            <section>
+                                {/* {JSON.stringify(blog)} */}
+                                <div className="row" style={{marginTop:'-30px', marginLeft:'', marginRight:''}}>
+                                    <img src={`${API}/blog/photo/${blog.slug}`} 
+                                    alt={`${blog.title}`} 
+                                    className="img img-fluid featured-image"/>
+                                </div>
+                            </section>
+                            <section>
+                                <p className="lead mt-3 mark pt-1 pb-1">
+                                Escrito por {blog.postedBy.name} | Publicado el {moment(blog.createdAt).local('es').format('LL')}
+                                </p>
+                            </section>
+                            <div className="pb-3">
+                                {showBlogCategories(blog)}
+                                {showBlogTags(blog)}
+                                <br/>
+                                <br/>
+                            </div>
+                        </div>
+                        <div className="container">
+                                <section className="col-md-12 lead">{renderHTML(blog.body)}</section>
+                         </div>   
+                         <div className="container pb-5">
+                            <h5 className="text-center pt-5 pb-5 h5">Blogs Relacionados</h5>
+                            <hr/>
+                            <p>Related blogs</p>
+                         </div>
+                         <div className="container pb-5">
+                            <p>show comments</p>
+                         </div>
+                </article>
+                </main>
             </Layout>
         </React.Fragment>
     )
 
 }
 
+/// useEffect
 
-SingleBlog.getInitialProps = ({query}) => {
-    return singleBlog(query.slug).then( data  => {
-        if(data.error){
-            console.log(data.error)
+SingleBlog.getInitialProps = ({ query }) => {
+    return singleBlog(query.slug).then(data => {
+        if (data.error) {
+            console.log(data.error);
         } else {
-            console.log('Get initial props in single blog',data)
-            return {blog: data}
+            // console.log('GET INITIAL PROPS IN SINGLE BLOG', data);
+            return { blog: data, query };
         }
-    })
-}
+    });
+};
 
-export default withRouter(SingleBlog)
+
+export default SingleBlog

@@ -2,6 +2,8 @@ import Link from 'next/Link'
 import renderHTML from 'react-render-html';
 import moment from 'moment'
 import {API} from '../../config'
+
+
 const Card = ({blog}) => {
 
     const showBlogCategories = blog => 
