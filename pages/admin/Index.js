@@ -23,7 +23,11 @@ const AdminIndex = () => {
                                             <a> Crear un nuevo Blog</a>
                                         </Link>
                                     </li>
-                                    <li className="list-group-item">ddklhdkjhd</li>
+                                    <li className="list-group-item">
+                                        <Link href="/admin/crud/blogs">
+                                                <a>   Actualizar un Blog </a>
+                                        </Link>
+                                    </li>
                                     <li className="list-group-item">ddklhdkjhd</li>
                                 </ul>
                             </div>

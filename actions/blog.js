@@ -56,3 +56,68 @@ export const singleBlog = (slug) => {
 
 
 
+/// related blogs
+
+export const listRelated = blog => {
+    return fetch(`${API}/blogs/related`, {
+        method: 'POST',
+        headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(blog)
+    })
+        .then(response => {
+            return response.json();
+        })
+        .catch(err => console.log(err));
+};
+
+//// list blogs for admin
+
+export const list = () => {
+    return fetch(`${API}/blogs`, {
+        method: 'GET'
+    })
+    .then(response => {
+        return response.json();
+    })
+    .catch(err => console.log(err));
+}
+
+/// remove blog
+
+export const removeBlog = (slug,token) => {
+    return fetch(`${API}/blog/${slug}`, {
+        method: 'DELETE',
+        headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',   // form data
+            Authorization: `Bearer ${token}`
+        }
+    })
+        .then(response => {
+            return response.json();
+        })
+        .catch(err => console.log(err));
+};
+
+
+/// UPDATE
+
+export const updateBlog = (blog,token,slug) => {
+    return fetch(`${API}/blog/${slug}`, {
+        method: 'PUT',
+        headers: {
+            Accept: 'application/json',
+        //    'Content-Type': 'application/json',   // form data
+            Authorization: `Bearer ${token}`
+        },
+        body: blog
+    })
+        .then(response => {
+            return response.json();
+        })
+        .catch(err => console.log(err));
+};
+

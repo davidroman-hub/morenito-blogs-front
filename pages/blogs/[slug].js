@@ -2,15 +2,33 @@ import Head from 'next/head'
 import Link from 'next/link'
 import Layout from '../../components/Layout'
 import {useState,useEffect} from 'react'
-import {singleBlog} from '../../actions/blog'
-import Card from '../../components/blog/Card'
+import {singleBlog, listRelated} from '../../actions/blog'
+//import Card from '../../components/blog/Card'
 import {API, DOMAIN, APP_NAME, FB_APP_ID} from '../../config'
-import {withRouter}from 'next/router'
+//import {withRouter}from 'next/router'
 import moment from 'moment'
 import renderHTML from 'react-render-html';
 
 
 const SingleBlog = ({blog,query}) => {
+    
+    const [related, setRelated] = useState([]);
+
+    const loadRelated = () => {
+        listRelated({ blog }).then(data => {
+            if (data.error) {
+                console.log(data.error);
+            } else {
+                setRelated(data);
+            }
+        });
+    };
+
+    // useEffect(() => {
+    //     loadRelated();
+    // }, []);
+
+
 
 const head = () => (
 
@@ -82,6 +100,7 @@ const showBlogTags = blog =>
                             <h5 className="text-center pt-5 pb-5 h5">Blogs Relacionados</h5>
                             <hr/>
                             <p>Related blogs</p>
+                            {/* {JSON.stringify(related)} */}
                          </div>
                          <div className="container pb-5">
                             <p>show comments</p>
